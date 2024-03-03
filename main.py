@@ -28,20 +28,25 @@ def write_note_names(track, output_file, midif):
                 note_name = NOTE_NAMES[msg.note % 12] + str(msg.note // 12 - 1)
                 if current_time not in notes_at_time:
                     notes_at_time[current_time] = []
-                notes_at_time[current_time].append(note_name)
+                notes_at_time[current_time].append((note_name, current_time))
 
         if tempo is None:
             tempo = 500000
 
-        for time, notes in sorted(notes_at_time.items()):
+        sorted_notes = sorted(notes_at_time.items())
+        for i, (time, notes) in enumerate(sorted_notes):
             notes_string = ['-'] * 6
-            for note in notes:
+            duration = 0
+            if i < len(sorted_notes) - 1:
+                duration = sorted_notes[i + 1][0] - time
+            for note, _ in notes:
                 string_index = FRET_NAMES[note][0] - 1
                 fret = str(FRET_NAMES[note][1])
                 notes_string[string_index] = fret if len(fret) == 1 else '-'
             f.write('|'.join(notes_string))
-            time_in_seconds = mido.tick2second(time, midif.ticks_per_beat, tempo)
-            f.write(f'|{time_in_seconds:.2f}| \n')
+            duration_in_seconds = mido.tick2second(duration, midif.ticks_per_beat, tempo)
+            f.write(f'|{duration_in_seconds:.2f}| \n')
+
 def separate_tracks(midifile):
     tracks = {}
     for i, track in enumerate(midifile.tracks):
