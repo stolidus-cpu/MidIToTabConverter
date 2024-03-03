@@ -16,6 +16,7 @@ FRET_NAMES = {'E2': (1, 0), 'F2': (1, 1), 'F#2': (1, 2), 'G2': (1, 3), 'G#2': (1
 
 def write_note_names(track, output_file, midif):
     with open(output_file, 'w') as f:
+        prev_note_coords = (0, 0)
         current_time = 0
         notes_at_time = {}
         tempo = None
