@@ -36,7 +36,7 @@ def write_note_names(track, output_file, midif):
             for note in notes:
                 string_index = FRET_NAMES[note][0] - 1
                 fret = str(FRET_NAMES[note][1])
-                notes_string[string_index] = fret if len(fret) == 1 else '-'
+                notes_string[string_index] = fret
             f.write('|'.join(notes_string))
             time_in_seconds = mido.tick2second(time, midif.ticks_per_beat, tempo)
             f.write(f'|{time_in_seconds:.2f}| \n')
@@ -58,7 +58,7 @@ def remove_dupes(midifile):
         midifile.tracks.remove(track)
 
 if __name__ == "__main__":
-    midi_file = mido.MidiFile('Metallica_-_Nothing_Else_Matters.mid')
+    midi_file = mido.MidiFile('National_Anthems_-_Moldovatest.mid')
 
     remove_dupes(midi_file)
 
